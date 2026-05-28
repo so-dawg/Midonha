@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://kxk51r8lvv0e"]
+
+[ext_resource type="PackedScene" uid="uid://wo0oii5ak5n8" path="res://scenes/Player.tscn" id="1_kqs1s"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kqs1s"]
+size = Vector2(200, 50)
+
+[node name="World" type="Node2D" unique_id=1579295416]
+
+[node name="Player" parent="." unique_id=703223595 instance=ExtResource("1_kqs1s")]
+position = Vector2(600, 318)
+
+[node name="Wall" type="StaticBody2D" parent="." unique_id=1056151136]
+position = Vector2(600, 400)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Wall" unique_id=1863714548]
+position = Vector2(4, 0)
+shape = SubResource("RectangleShape2D_kqs1s")
+
+[node name="ColorRect" type="ColorRect" parent="Wall" unique_id=1121020326]
+custom_minimum_size = Vector2(200, 50)
+offset_left = -94.0
+offset_top = -24.0
+offset_right = 106.0
+offset_bottom = 26.0
