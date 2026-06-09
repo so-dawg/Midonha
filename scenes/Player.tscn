@@ -4,10 +4,11 @@
 [ext_resource type="Texture2D" uid="uid://byn2mm47uik11" path="res://art/Khun/attack.png" id="2_70d11"]
 [ext_resource type="Texture2D" uid="uid://buimj20ydjge7" path="res://art/Khun/khun-0001.png" id="2_g2els"]
 [ext_resource type="Texture2D" uid="uid://csskmqfevgtvx" path="res://art/Khun/jump.png" id="4_tuyoq"]
+[ext_resource type="Texture2D" uid="uid://obvrhhj21itr" path="res://art/Khun/parry.png" id="5_70d11"]
 [ext_resource type="Texture2D" uid="uid://c58lnhl3toakr" path="res://art/Khun/run.png" id="5_fjrip"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qu4a1"]
-size = Vector2(14, 27)
+size = Vector2(11, 26)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_o4126"]
 atlas = ExtResource("2_70d11")
@@ -68,6 +69,26 @@ region = Rect2(64, 0, 64, 64)
 [sub_resource type="AtlasTexture" id="AtlasTexture_fvsjc"]
 atlas = ExtResource("4_tuyoq")
 region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cw2d6"]
+atlas = ExtResource("5_70d11")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_khinc"]
+atlas = ExtResource("5_70d11")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bruh7"]
+atlas = ExtResource("5_70d11")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6eyey"]
+atlas = ExtResource("5_70d11")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d3wef"]
+atlas = ExtResource("5_70d11")
+region = Rect2(256, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hxdpb"]
 atlas = ExtResource("5_fjrip")
@@ -171,10 +192,25 @@ animations = [{
 "name": &"jump",
 "speed": 5.0
 }, {
-"frames": [],
-"loop": true,
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cw2d6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_khinc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bruh7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6eyey")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d3wef")
+}],
+"loop": false,
 "name": &"parry",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -216,15 +252,40 @@ animations = [{
 
 [node name="player" type="CharacterBody2D" parent="." unique_id=1149721196]
 script = ExtResource("1_qlg0r")
-max_bullets = 3
+health = null
+max_speed = null
+ground_accel = null
+ground_friction = null
+air_accel = null
+air_friction = null
+turn_accel_mult = null
+jump_velocity = null
+gravity_rising = null
+gravity_falling = null
+max_fall_speed = null
+apex_threshold = null
+apex_gravity_mult = null
+hard_land_velocity = null
+hard_land_lockout = null
+landing_control_mult = null
+jump_stretch = null
+land_squash = null
+hard_land_squash = null
+squash_duration = null
+coyote_time = null
+jump_buffer_time = null
+max_bullets = null
+hit_stop_duration = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="player" unique_id=402869328]
-position = Vector2(0, 0.5)
+position = Vector2(0.5, 2)
 shape = SubResource("RectangleShape2D_qu4a1")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="player" unique_id=1437154026]
+position = Vector2(-1, 0)
 sprite_frames = SubResource("SpriteFrames_d2wvv")
 animation = &"parry"
+frame_progress = 0.10830826
 metadata/_aseprite_wizard_interface_config_ = {
 "animation_section": false,
 "layer_section": false,

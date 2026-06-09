@@ -6,6 +6,8 @@ var _already_hit: Array[Node] = []
 
 
 func _ready() -> void:
+	if flip_h:
+		$Area2D.scale.x = -1
 	play()
 	animation_finished.connect(queue_free)
 

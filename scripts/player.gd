@@ -1,5 +1,9 @@
 extends CharacterBody2D
 
+# Health
+# TODO: Make a ui, items and health bullets
+@export var health: int = 100
+
 # Horizontal movement
 @export var max_speed: float = 170.0
 @export var ground_accel: float = 800.0
@@ -34,7 +38,7 @@ extends CharacterBody2D
 @export var jump_buffer_time: float = 0.12
 
 # Parry bullets and hit stop duration
-@export var max_bullets: int = 6
+@export var max_bullets: int = 10
 @export var hit_stop_duration: float = 0.08
 
 var coyote_timer: float = 0.0
@@ -97,7 +101,8 @@ func _physics_process(delta: float) -> void:
 	if direction != 0.0:
 		sprite.flip_h = direction < 0.0
 	var attacking := sprite.animation == "attack1" and sprite.is_playing()
-	if attacking:
+	var parrying := sprite.animation == "parry" and sprite.is_playing()
+	if attacking or parrying:
 		pass
 	elif not on_floor:
 		sprite.play("jump")
@@ -172,9 +177,9 @@ func _handle_parry(delta: float) -> void:
 		return
 	if bullets <= 0 or parry_timer > 0.0:
 		return
+	sprite.play("parry")
 	bullets -= 1
 	parry_timer = PARRY_TIME
-	sprite.play("shoot")
 
 func is_parrying() -> bool:
 	return parry_timer > 0.0
