@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://csavepoint01a"]
+
+[ext_resource type="Script" path="res://scripts/world/save_point.gd" id="1_sp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sp"]
+size = Vector2(20, 24)
+
+[node name="SavePoint" type="Area2D"]
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("1_sp")
+
+[node name="Visual" type="Polygon2D" parent="."]
+color = Color(0.3, 0.6, 1, 1)
+polygon = PackedVector2Array(-8, -12, 8, -12, 8, 12, -8, 12)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_sp")

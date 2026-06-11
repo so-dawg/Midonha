@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://dh0n47budw0bu"]
+
+[sub_resource type="Theme" id="Theme_ex8h3"]
+
+[node name="ui_health&stamina" type="CanvasLayer" unique_id=159894244]
+
+[node name="HealthDiamonds" type="HBoxContainer" parent="." unique_id=1555067544 groups=["health_diamonds"]]
+offset_left = 17.0
+offset_top = 4.0
+offset_right = 21.0
+offset_bottom = 7.0
+scale = Vector2(1.5, 1.5)
+theme_override_constants/separation = 1
+
+[node name="TextureRect" type="TextureRect" parent="HealthDiamonds" unique_id=1367727175]
+layout_mode = 2
+
+[node name="TextureRect2" type="TextureRect" parent="HealthDiamonds" unique_id=227049963]
+layout_mode = 2
+
+[node name="TextureRect3" type="TextureRect" parent="HealthDiamonds" unique_id=808537949]
+layout_mode = 2
+
+[node name="TextureRect4" type="TextureRect" parent="HealthDiamonds" unique_id=1333724039]
+layout_mode = 2
+
+[node name="TextureRect5" type="TextureRect" parent="HealthDiamonds" unique_id=1034047006]
+layout_mode = 2
+
+[node name="StaminaBar" type="ProgressBar" parent="." unique_id=649038359 groups=["stamina_bar"]]
+offset_left = 14.0
+offset_top = 64.0
+offset_right = 148.0
+offset_bottom = 84.0
+theme = SubResource("Theme_ex8h3")
+show_percentage = false
+
+[node name="HealLabel" type="Label" parent="." groups=["heal_label"]]
+offset_left = 14.0
+offset_top = 88.0
+offset_right = 148.0
+offset_bottom = 108.0
+text = "Heals: 3"
+
+[node name="CurrencyLabel" type="Label" parent="." groups=["currency_label"]]
+offset_left = 14.0
+offset_top = 110.0
+offset_right = 148.0
+offset_bottom = 130.0
+text = "Currency: 0"
