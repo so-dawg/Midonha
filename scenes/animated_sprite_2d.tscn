@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://ca8i1nov10g3w"]
+
+[ext_resource type="Texture2D" uid="uid://cekkukonx1fb2" path="res://art/effects/Smoke N Dust 03/skid.png" id="1_7k5lx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6rhlf"]
+atlas = ExtResource("1_7k5lx")
+region = Rect2(11, 10, 30, 22)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2ccxi"]
+atlas = ExtResource("1_7k5lx")
+region = Rect2(41, 10, 30, 22)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gn1jp"]
+atlas = ExtResource("1_7k5lx")
+region = Rect2(71, 10, 30, 22)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q3yr6"]
+atlas = ExtResource("1_7k5lx")
+region = Rect2(101, 10, 30, 22)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j25fo"]
+atlas = ExtResource("1_7k5lx")
+region = Rect2(131, 10, 30, 22)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lhh1s"]
+atlas = ExtResource("1_7k5lx")
+region = Rect2(161, 10, 30, 22)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_y5pty"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6rhlf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2ccxi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gn1jp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q3yr6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j25fo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lhh1s")
+}],
+"loop": true,
+"name": &"skid",
+"speed": 5.0
+}]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" unique_id=1148521332]
+sprite_frames = SubResource("SpriteFrames_y5pty")
+animation = &"skid"

@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://dmssrow6l78sj" path="res://art/tilesets/stringstar fields (2)/tileset.png" id="2_d1c63"]
 [ext_resource type="PackedScene" uid="uid://b7tytkryodi74" path="res://scenes/Killzone.tscn" id="4_d1c63"]
 [ext_resource type="PackedScene" uid="uid://dh0n47budw0bu" path="res://scenes/ui_health&stamina.tscn" id="5_1lgw5"]
-[ext_resource type="PackedScene" uid="uid://bptrlr0enemy1" path="res://scenes/Patroller.tscn" id="6_patrol"]
+[ext_resource type="PackedScene" uid="uid://bptrlr0enemy1" path="res://scenes/ChainBall.tscn" id="7_0uv0p"]
 [ext_resource type="PackedScene" uid="uid://csavepoint01a" path="res://scenes/SavePoint.tscn" id="7_save"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_d1c63"]
@@ -309,10 +309,10 @@ position = Vector2(2, -32)
 [node name="Killzone" parent="." unique_id=982698932 instance=ExtResource("4_d1c63")]
 position = Vector2(0, 57)
 
-[node name="Patroller" parent="." unique_id=1198877288 instance=ExtResource("6_patrol")]
-position = Vector2(48, -32)
-
 [node name="ui_health&stamina" parent="." unique_id=159894244 instance=ExtResource("5_1lgw5")]
 
 [node name="SavePoint" parent="." unique_id=1314509046 instance=ExtResource("7_save")]
 position = Vector2(389, -125)
+
+[node name="Chain_Ball_Bot" parent="." unique_id=395331650 instance=ExtResource("7_0uv0p")]
+position = Vector2(189, -32)

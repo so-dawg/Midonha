@@ -1,0 +1,147 @@
+[gd_scene format=3 uid="uid://d340m7txy04ek"]
+
+[ext_resource type="Texture2D" uid="uid://ctlamutstc0wo" path="res://art/effects/Smoke N Dust 03/SmokeNDust P03 VFX 1.png" id="1_n7s5k"]
+[ext_resource type="Texture2D" uid="uid://bherr0rbt6scw" path="res://art/effects/Smoke N Dust 03/landing_smoke.png" id="2_7i4io"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1kmfj"]
+atlas = ExtResource("1_n7s5k")
+region = Rect2(15, 0, 78, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5s2k0"]
+atlas = ExtResource("1_n7s5k")
+region = Rect2(93, 0, 78, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_popga"]
+atlas = ExtResource("1_n7s5k")
+region = Rect2(171, 0, 78, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d3qkf"]
+atlas = ExtResource("1_n7s5k")
+region = Rect2(249, 0, 78, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hnd3e"]
+atlas = ExtResource("1_n7s5k")
+region = Rect2(327, 0, 78, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q24qh"]
+atlas = ExtResource("1_n7s5k")
+region = Rect2(405, 0, 78, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tt462"]
+atlas = ExtResource("1_n7s5k")
+region = Rect2(483, 0, 78, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nh35r"]
+atlas = ExtResource("1_n7s5k")
+region = Rect2(561, 0, 78, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m65dh"]
+atlas = ExtResource("1_n7s5k")
+region = Rect2(639, 0, 78, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1f6ed"]
+atlas = ExtResource("2_7i4io")
+region = Rect2(5, 12, 63, 52)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ina0e"]
+atlas = ExtResource("2_7i4io")
+region = Rect2(68, 12, 63, 52)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dg0ks"]
+atlas = ExtResource("2_7i4io")
+region = Rect2(131, 12, 63, 52)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mf1af"]
+atlas = ExtResource("2_7i4io")
+region = Rect2(194, 12, 63, 52)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4h36a"]
+atlas = ExtResource("2_7i4io")
+region = Rect2(257, 12, 63, 52)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m7d47"]
+atlas = ExtResource("2_7i4io")
+region = Rect2(320, 12, 63, 52)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_btwoc"]
+atlas = ExtResource("2_7i4io")
+region = Rect2(383, 12, 63, 52)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t1v4q"]
+atlas = ExtResource("2_7i4io")
+region = Rect2(446, 12, 63, 52)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mbkd3"]
+atlas = ExtResource("2_7i4io")
+region = Rect2(509, 12, 63, 52)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mi0go"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1kmfj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5s2k0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_popga")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d3qkf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hnd3e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q24qh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tt462")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nh35r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m65dh")
+}],
+"loop": true,
+"name": &"dash_smoke",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1f6ed")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ina0e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dg0ks")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mf1af")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4h36a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m7d47")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_btwoc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t1v4q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mbkd3")
+}],
+"loop": true,
+"name": &"land_smoke",
+"speed": 5.0
+}]
+
+[node name="smoke" type="AnimatedSprite2D" unique_id=892304280]
+sprite_frames = SubResource("SpriteFrames_mi0go")
+animation = &"land_smoke"

@@ -1,4 +1,5 @@
-class_name Entity extends CharacterBody2D
+class_name Entity
+extends CharacterBody2D
 
 # BASE ENEMY
 # Shared guts for every enemy: health, taking damage (with white hit-flash and
@@ -14,12 +15,11 @@ class_name Entity extends CharacterBody2D
 @export var knockback_force: float = 220.0   # horizontal shove when hit
 @export var knockback_time: float = 0.12     # how long the enemy's AI is suspended after a hit
 @export var stagger_time: float = 0.8        # how long the enemy is stunned after a parry
-@export var hit_flash_time: float = 0.08     # how long the white flash lasts
+@export var detection_range: float = 120.0
 
 var health: int
-var knockback_timer: float = 0.0             # > 0 while being knocked back (AI yields)
+var knockback_timer: float = 0.0          # > 0 while being knocked back (AI yields)
 
-@onready var visual: CanvasItem = $Visual            # sprite/placeholder to flash
 @onready var hitbox: Area2D = get_node_or_null("Hitbox")  # optional contact-damage area
 
 signal died
@@ -41,6 +41,7 @@ func _physics_process(delta: float) -> void:
 	_behavior(delta)
 	move_and_slide()
 
+
 # Per-enemy AI / movement. Default does nothing (a stationary enemy).
 # Subclasses should bail out early while is_stunned() so knockback can carry.
 func _behavior(_delta: float) -> void:
@@ -56,18 +57,10 @@ func is_stunned() -> bool:
 func take_damage(amount: int, from: Vector2 = Vector2.INF) -> void:
 	health -= amount
 	health_changed.emit(health, max_health)
-	_flash()
 	_knockback(from)
 	if health <= 0:
 		die()
 
-# White impact flash so hits read clearly (a combat-feel requirement).
-func _flash() -> void:
-	if visual == null:
-		return
-	visual.modulate = Color(4, 4, 4)   # blown-out white
-	var t := create_tween()
-	t.tween_property(visual, "modulate", Color.WHITE, hit_flash_time)
 
 # Shove away from the damage source. Skipped if no source was given.
 func _knockback(from: Vector2) -> void:
@@ -84,7 +77,6 @@ func _knockback(from: Vector2) -> void:
 func stagger() -> void:
 	velocity.x = 0.0
 	knockback_timer = stagger_time
-	_flash()
 	staggered.emit()
 
 # Override in subclasses to drop loot / play an effect. Default: vanish.
@@ -101,5 +93,13 @@ func _on_hitbox_body_entered(body: Node) -> void:
 	# If the player is parrying, they negate the hit and stagger us instead.
 	if body.has_method("try_parry") and body.try_parry():
 		stagger()
-	else:
-		body.take_damage(contact_damage)
+
+func _player_dir() -> float:
+	var p := get_tree().get_first_node_in_group("player") as Node2D
+	if not p:
+		print("NO PLAYER FOUND")
+		return 0.0
+	var dist := global_position.distance_to(p.global_position)
+	if dist > detection_range:
+		return 0.0
+	return signf(p.global_position.x - global_position.x)

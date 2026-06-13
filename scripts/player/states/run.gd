@@ -3,12 +3,13 @@ extends PlayerState
 # Grounded and moving. Same as idle but also handles the skid (pressing against
 # your own momentum) feel, and drops back to idle once you've stopped.
 
+var facing := 1
+
 func exit() -> void:
 	p.was_skidding = false
 
 func physics_update(delta: float) -> String:
 	var dir := p.input_dir()
-
 	if p.wants_dash():
 		return "dash"
 
@@ -33,7 +34,6 @@ func physics_update(delta: float) -> String:
 		p.sprite.speed_scale = 0.3 if is_skidding else 1.0
 
 	# Rising edge of a skid — hook for VFX/SFX once you have them.
-	if is_skidding and not p.was_skidding:
-		pass  # TODO: emit dust particles, play scuff sfx
+
 	p.was_skidding = is_skidding
 	return ""

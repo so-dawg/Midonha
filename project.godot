@@ -15,13 +15,17 @@ run/main_scene="uid://kxk51r8lvv0e"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GameState="*res://scripts/world/game_state.gd"
+
 [dotnet]
 
 project/assembly_name="Midonha"
 
-[autoload]
+[global_group]
 
-GameState="*res://scripts/world/game_state.gd"
+player=""
 
 [input]
 

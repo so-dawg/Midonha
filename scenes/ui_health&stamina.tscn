@@ -5,6 +5,7 @@
 [node name="ui_health&stamina" type="CanvasLayer" unique_id=159894244]
 
 [node name="HealthDiamonds" type="HBoxContainer" parent="." unique_id=1555067544 groups=["health_diamonds"]]
+texture_filter = 1
 offset_left = 17.0
 offset_top = 4.0
 offset_right = 21.0
@@ -35,14 +36,14 @@ offset_bottom = 84.0
 theme = SubResource("Theme_ex8h3")
 show_percentage = false
 
-[node name="HealLabel" type="Label" parent="." groups=["heal_label"]]
+[node name="HealLabel" type="Label" parent="." unique_id=386283497 groups=["heal_label"]]
 offset_left = 14.0
 offset_top = 88.0
 offset_right = 148.0
 offset_bottom = 108.0
 text = "Heals: 3"
 
-[node name="CurrencyLabel" type="Label" parent="." groups=["currency_label"]]
+[node name="CurrencyLabel" type="Label" parent="." unique_id=893269173 groups=["currency_label"]]
 offset_left = 14.0
 offset_top = 110.0
 offset_right = 148.0

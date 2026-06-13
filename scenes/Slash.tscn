@@ -48,7 +48,7 @@ animation = &"slash"
 script = ExtResource("2_dikwq")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1198817218]
-collision_layer = 2
+collision_layer = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=467237691]
 position = Vector2(17.5, 2.5)
