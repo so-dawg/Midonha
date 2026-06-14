@@ -1,28 +1,25 @@
 class_name Entity
 extends CharacterBody2D
 
-# BASE ENEMY
-# Shared guts for every enemy: health, taking damage (with white hit-flash and
-# knockback), death, and gravity. Concrete enemies (Patroller, Ranged, Brute...)
-# extend this and implement _behavior() for their own movement / AI — they do
-# NOT touch damage or death, they inherit it.
-
 @export var max_health: int = 4
 @export var move_speed: float = 40.0
 @export var gravity: float = 1200.0
-@export var contact_damage: int = 1          # damage dealt to the player on touch
-@export var currency_reward: int = 5         # currency granted to the player on death
-@export var knockback_force: float = 220.0   # horizontal shove when hit
-@export var knockback_time: float = 0.12     # how long the enemy's AI is suspended after a hit
-@export var stagger_time: float = 0.8        # how long the enemy is stunned after a parry
-@export var detection_range: float = 120.0
+@export var contact_damage: int = 1
+@export var currency_reward: int = 5
+@export var knockback_force: float = 220.0
+@export var knockback_time: float = 0.12
+@export var stagger_time: float = 0.8
+@export var detection_range: float = 80.0
 @export var parry_window: float = 0.2
+@export var contact_cooldown: float = 0.5
 
 var health: int
-var knockback_timer: float = 0.0          # > 0 while being knocked back (AI yields)
+var knockback_timer: float = 0.0
 var is_dead := false
+var contact_timer: float = 0.0
+var can_contact_damage: bool = true
 
-@onready var hitbox: Area2D = get_node_or_null("Hitbox")  # optional contact-damage area
+@onready var hitbox: Area2D = get_node_or_null("Hitbox")
 
 signal died
 signal health_changed(current: int, maximum: int)
@@ -30,33 +27,54 @@ signal staggered
 
 func _ready() -> void:
 	health = max_health
-	# If the enemy has a Hitbox area, hurt the player when they walk into it.
-	if hitbox:
-		hitbox.body_entered.connect(_on_hitbox_body_entered)
 
-# Base movement loop: gravity + whatever the subclass does + move_and_slide.
-# Subclasses override _behavior(), not this.
 func _physics_process(delta: float) -> void:
 	knockback_timer = max(knockback_timer - delta, 0.0)
+	contact_timer = max(contact_timer - delta, 0.0)
+
 	if not is_on_floor():
 		velocity.y += gravity * delta
 	if not is_dead:
 		_behavior(delta)
+
+	_handle_contact_damage()
 	move_and_slide()
 
 
-# Per-enemy AI / movement. Default does nothing (a stationary enemy).
-# Subclasses should bail out early while is_stunned() so knockback can carry.
+
+func _handle_contact_damage() -> void:
+	if not hitbox:
+		print("ERROR: hitbox is null!")
+		return
+
+	print("Monitoring: ", hitbox.monitoring, " can_contact_damage: ", can_contact_damage)
+
+	if not can_contact_damage or contact_timer > 0.0:
+		print("Blocked: contact_timer=", contact_timer, " can_contact_damage=", can_contact_damage)
+		return
+
+	var bodies = hitbox.get_overlapping_bodies()
+	print("Bodies overlapping: ", bodies.size())
+
+	if bodies.is_empty():
+		print("No bodies found!")
+		return
+
+	var body = bodies[0]
+	print("Body found: ", body.name, " - in group: ", body.is_in_group("player"))
+
+	if not (body.is_in_group("player") and body.has_method("take_damage")):
+		print("Body doesn't meet conditions!")
+		return
+
+	# ... rest of function
+
 func _behavior(_delta: float) -> void:
 	pass
 
-# True briefly after taking a hit — the AI should not drive velocity now, or it
-# would instantly overwrite the knockback shove.
 func is_stunned() -> bool:
 	return knockback_timer > 0.0
 
-# Called by the player's slash (slash.gd). `from` is the attacker's position,
-# used to decide which way to knock the enemy back.
 func take_damage(amount: int, from: Vector2 = Vector2.INF) -> void:
 	if is_dead:
 		return
@@ -66,8 +84,6 @@ func take_damage(amount: int, from: Vector2 = Vector2.INF) -> void:
 	if health <= 0:
 		die()
 
-
-# Shove away from the damage source. Skipped if no source was given.
 func _knockback(from: Vector2) -> void:
 	if from == Vector2.INF:
 		return
@@ -77,34 +93,19 @@ func _knockback(from: Vector2) -> void:
 	velocity.x = dir * knockback_force
 	knockback_timer = knockback_time
 
-# Stunned in place after a successful player parry — long enough to punish.
-# Reuses the knockback/stun timer so _behavior() yields (see is_stunned()).
 func stagger() -> void:
 	velocity.x = 0.0
 	knockback_timer = stagger_time
 	staggered.emit()
 
-# Override in subclasses to drop loot / play an effect. Default: vanish.
 func die() -> void:
 	GameState.add_currency(currency_reward)
 	died.emit()
 	queue_free()
 
-# Contact damage to the player. Only the player has both take_damage and the
-# "player" group, so world tiles / other enemies are ignored.
-func _on_hitbox_body_entered(body: Node) -> void:
-	if not (body.is_in_group("player") and body.has_method("take_damage")):
-		return
-	# If the player is parrying, they negate the hit and stagger us instead.
-	if body.has_method("try_parry") and body.try_parry(parry_window):
-		stagger()
-	elif body.has_method("take_damage"):
-		body.take_damage(contact_damage)
-
 func _player_dir() -> float:
 	var p := get_tree().get_first_node_in_group("player") as Node2D
 	if not p:
-		print("NO PLAYER FOUND")
 		return 0.0
 	var dist := global_position.distance_to(p.global_position)
 	if dist > detection_range:

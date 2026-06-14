@@ -11,7 +11,7 @@ offset_top = 4.0
 offset_right = 21.0
 offset_bottom = 7.0
 scale = Vector2(1.5, 1.5)
-theme_override_constants/separation = 1
+theme_override_constants/separation = 4
 
 [node name="TextureRect" type="TextureRect" parent="HealthDiamonds" unique_id=1367727175]
 layout_mode = 2
