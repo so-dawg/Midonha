@@ -216,7 +216,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"death",
-"speed": 7.0
+"speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -298,26 +298,25 @@ radius = 5.0
 height = 18.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ybfy6"]
-size = Vector2(36, 14)
+size = Vector2(58.5, 14)
 
 [node name="Chain_Ball_Bot" type="CharacterBody2D" unique_id=395331650]
 collision_layer = 4
 script = ExtResource("1_patrl")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1606305425]
+position = Vector2(-3, -3)
 sprite_frames = SubResource("SpriteFrames_sdjpf")
-animation = &"attack2"
+animation = &"idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1082964436]
-position = Vector2(2.5, 3)
 shape = SubResource("RectangleShape2D_10tfh")
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=1743593835]
+collision_layer = 4
 collision_mask = 0
-monitoring = false
 
 [node name="HurtboxShape" type="CollisionShape2D" parent="Hurtbox" unique_id=704833441]
-position = Vector2(3, 2)
 shape = SubResource("CapsuleShape2D_x3evo")
 debug_color = Color(0.98695284, 0.1136701, 3.85046e-07, 0.41960785)
 
@@ -326,6 +325,5 @@ collision_layer = 16
 collision_mask = 2
 
 [node name="HitboxShape" type="CollisionShape2D" parent="Hitbox" unique_id=707443129]
-position = Vector2(30, 6)
 shape = SubResource("RectangleShape2D_ybfy6")
 debug_color = Color(0.65457684, 0.5179122, 0, 0.41960785)

@@ -7,7 +7,7 @@ extends CharacterBody2D
 # extend this and implement _behavior() for their own movement / AI — they do
 # NOT touch damage or death, they inherit it.
 
-@export var max_health: int = 3
+@export var max_health: int = 4
 @export var move_speed: float = 40.0
 @export var gravity: float = 1200.0
 @export var contact_damage: int = 1          # damage dealt to the player on touch
@@ -16,9 +16,11 @@ extends CharacterBody2D
 @export var knockback_time: float = 0.12     # how long the enemy's AI is suspended after a hit
 @export var stagger_time: float = 0.8        # how long the enemy is stunned after a parry
 @export var detection_range: float = 120.0
+@export var parry_window: float = 0.2
 
 var health: int
 var knockback_timer: float = 0.0          # > 0 while being knocked back (AI yields)
+var is_dead := false
 
 @onready var hitbox: Area2D = get_node_or_null("Hitbox")  # optional contact-damage area
 
@@ -38,7 +40,8 @@ func _physics_process(delta: float) -> void:
 	knockback_timer = max(knockback_timer - delta, 0.0)
 	if not is_on_floor():
 		velocity.y += gravity * delta
-	_behavior(delta)
+	if not is_dead:
+		_behavior(delta)
 	move_and_slide()
 
 
@@ -55,6 +58,8 @@ func is_stunned() -> bool:
 # Called by the player's slash (slash.gd). `from` is the attacker's position,
 # used to decide which way to knock the enemy back.
 func take_damage(amount: int, from: Vector2 = Vector2.INF) -> void:
+	if is_dead:
+		return
 	health -= amount
 	health_changed.emit(health, max_health)
 	_knockback(from)
@@ -91,8 +96,10 @@ func _on_hitbox_body_entered(body: Node) -> void:
 	if not (body.is_in_group("player") and body.has_method("take_damage")):
 		return
 	# If the player is parrying, they negate the hit and stagger us instead.
-	if body.has_method("try_parry") and body.try_parry():
+	if body.has_method("try_parry") and body.try_parry(parry_window):
 		stagger()
+	elif body.has_method("take_damage"):
+		body.take_damage(contact_damage)
 
 func _player_dir() -> float:
 	var p := get_tree().get_first_node_in_group("player") as Node2D

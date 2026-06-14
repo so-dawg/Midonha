@@ -313,7 +313,7 @@ func is_parrying() -> bool:
 
 # Called by attackers: if we're parrying, eat the hit, trigger hit stop, and
 # report success. Returns true when the parry connected.
-func try_parry() -> bool:
+func try_parry(_parry_window: float = PARRY_TIME) -> bool:
 	if not is_parrying():
 		return false
 	parry_timer = 0.0

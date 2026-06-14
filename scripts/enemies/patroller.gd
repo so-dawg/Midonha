@@ -20,18 +20,24 @@ var state        = State.PATROL
 var attack_step  = 0
 var attack_timer = 0.0
 var already_hit = false
+var is_hurt := false
 
 # ── ANIMATION ──────────────────────────────────────────
 @onready var anim = $AnimatedSprite2D
 
 func _ready() -> void:
 	super._ready()
-	hitbox.monitoring = false
+	stagger_time = 4.0 # Longer window for this enemy
+	parry_window = 0.4
 
 # ── AI (called by Entity every frame) ──────────────────
 func _behavior(delta: float) -> void:
 	if is_stunned():
-		anim.play("hurt")
+		if anim.animation != "hurt":
+			anim.play("hurt")
+		return
+
+	if is_hurt:
 		return
 
 	match state:
@@ -43,7 +49,7 @@ func _behavior(delta: float) -> void:
 	# flip sprite to face movement direction
 	if facing != 0:
 		anim.flip_h = facing < 0
-		hitbox.position = Vector2(0 * facing, 0)
+		hitbox.position = Vector2(25 * facing, 4)
 		hitbox.scale.x = facing
 
 # ── PATROL ─────────────────────────────────────────────
@@ -104,6 +110,7 @@ func _attack(delta: float) -> void:
 	elif attack_step == 2 and attack_timer >= 0.2:
 		state        = State.COOLDOWN
 		attack_timer = 0.0
+		already_hit = true
 
 func _flash_hitbox() -> void:
 	if already_hit:
@@ -111,11 +118,9 @@ func _flash_hitbox() -> void:
 	hitbox.monitoring = true
 	await get_tree().physics_frame
 	var bodies = hitbox.get_overlapping_bodies()
-	if not already_hit:
-		for body in bodies:
-			if body.is_in_group("player") and body.has_method("take_damage"):
-				body.take_damage(attack_damage)
-				break
+	for body in bodies:
+		if body.is_in_group("player") and body.has_method("take_damage"):
+			break
 	hitbox.monitoring = false
 
 # ── COOLDOWN ───────────────────────────────────────────
@@ -136,6 +141,27 @@ func _cooldown(delta: float) -> void:
 
 # ── DEATH (override Entity to play animation first) ────
 func die() -> void:
+	is_dead = true
+	velocity = Vector2.ZERO
+	anim.play("hurt")
+	await anim.animation_finished
 	anim.play("death")
 	await anim.animation_finished
 	super.die()   # calls Entity.die() → adds currency → queue_free
+
+# Overrride (take _damage to play animation when hit to make it connsistant)
+func take_damage(amount: int, from: Vector2 = Vector2.INF) -> void:
+	if is_dead:
+		return
+	if is_hurt:
+		return
+	# Interrupt attack or cooldown
+	if state in [State.ATTACK, State.COOLDOWN]:
+		state = State.CHASE
+		attack_step = 0
+		attack_timer = 0.0
+	is_hurt = true
+	anim.play("hurt")
+	await anim.animation_finished
+	is_hurt = false
+	super.take_damage(amount, from)
