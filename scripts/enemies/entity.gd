@@ -4,14 +4,11 @@ extends CharacterBody2D
 @export var max_health: int = 4
 @export var move_speed: float = 40.0
 @export var gravity: float = 1200.0
-@export var contact_damage: int = 1
 @export var currency_reward: int = 5
 @export var knockback_force: float = 220.0
 @export var knockback_time: float = 0.12
-@export var stagger_time: float = 0.8
 @export var detection_range: float = 80.0
 @export var parry_window: float = 0.2
-@export var contact_cooldown: float = 0.5
 
 var health: int
 var knockback_timer: float = 0.0
@@ -22,8 +19,6 @@ var can_contact_damage: bool = true
 @onready var hitbox: Area2D = get_node_or_null("Hitbox")
 
 signal died
-signal health_changed(current: int, maximum: int)
-signal staggered
 
 func _ready() -> void:
 	health = max_health
@@ -40,34 +35,23 @@ func _physics_process(delta: float) -> void:
 	_handle_contact_damage()
 	move_and_slide()
 
-
-
 func _handle_contact_damage() -> void:
-	if not hitbox:
-		print("ERROR: hitbox is null!")
-		return
-
-	print("Monitoring: ", hitbox.monitoring, " can_contact_damage: ", can_contact_damage)
-
 	if not can_contact_damage or contact_timer > 0.0:
-		print("Blocked: contact_timer=", contact_timer, " can_contact_damage=", can_contact_damage)
 		return
 
 	var bodies = hitbox.get_overlapping_bodies()
-	print("Bodies overlapping: ", bodies.size())
-
 	if bodies.is_empty():
-		print("No bodies found!")
 		return
 
 	var body = bodies[0]
-	print("Body found: ", body.name, " - in group: ", body.is_in_group("player"))
-
 	if not (body.is_in_group("player") and body.has_method("take_damage")):
-		print("Body doesn't meet conditions!")
 		return
 
-	# ... rest of function
+	if body.has_method("try_parry") and body.try_parry():
+		return
+
+	contact_timer = 0.5
+	body.take_damage(1)
 
 func _behavior(_delta: float) -> void:
 	pass
@@ -79,7 +63,6 @@ func take_damage(amount: int, from: Vector2 = Vector2.INF) -> void:
 	if is_dead:
 		return
 	health -= amount
-	health_changed.emit(health, max_health)
 	_knockback(from)
 	if health <= 0:
 		die()
@@ -92,11 +75,6 @@ func _knockback(from: Vector2) -> void:
 		dir = 1.0
 	velocity.x = dir * knockback_force
 	knockback_timer = knockback_time
-
-func stagger() -> void:
-	velocity.x = 0.0
-	knockback_timer = stagger_time
-	staggered.emit()
 
 func die() -> void:
 	GameState.add_currency(currency_reward)

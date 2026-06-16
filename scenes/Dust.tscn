@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://cinu3eawxmf60"]
+
+[ext_resource type="Texture2D" uid="uid://bo65h0kfxqno7" path="res://art/effects/Smoke N Dust 03/skid_2.png" id="1_gb0qn"]
+[ext_resource type="Script" uid="uid://fk45o8pfme50" path="res://scripts/effects/dust.gd" id="2_3w78o"]
+
+[node name="Sprite2D" type="Sprite2D" unique_id=184438514]
+texture_filter = 1
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_gb0qn")
+script = ExtResource("2_3w78o")

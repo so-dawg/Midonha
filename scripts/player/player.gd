@@ -33,7 +33,7 @@ class_name Player extends CharacterBody2D
 @export var ground_friction: float = 1000.0
 @export var air_accel: float = 500.0
 @export var air_friction: float = 200.0
-@export var turn_accel_mult: float = 1.7      # accel is stronger when turning against current velocity
+@export var turn_accel_mult: float = 1.0       # accel is stronger when turning against current velocity
 
 # Jump / gravity
 @export var jump_velocity: float = -340.0
@@ -102,12 +102,14 @@ var stamina: float = 100.0                    #stamina make it cost while player
 
 var health: int                               # set from max_health in _ready
 var heal_charges: int                         # remaining heals; refilled on respawn
+var dust_timer := 0.0
 
 const PARRY_TIME := 0.2
 const SLASH_SCENE := preload("res://scenes/Slash.tscn")
 const GHOST_SCENE := preload("res://scenes/Ghost.tscn")
 const CURRENCY_DROP_SCENE := preload("res://scenes/CurrencyDrop.tscn")
 const GHOST_INTERVAL: float = 0.03
+const DUST := preload("res://scenes/Dust.tscn")
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var health_diamonds = get_tree().get_first_node_in_group("health_diamonds")

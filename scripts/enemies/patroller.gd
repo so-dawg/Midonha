@@ -9,7 +9,6 @@ const COOLDOWN_TIME = 1.0
 # ── ATTACK ─────────────────────────────────────────────
 @export var attack_range: float = 50.0
 @export var attack_damage: int = 1
-@export var max_attack_timer: float = 0.2
 
 # ── STATE ──────────────────────────────────────────────
 enum State { PATROL, CHASE, ATTACK, COOLDOWN }
@@ -28,8 +27,8 @@ var facing = 1.0
 
 func _ready() -> void:
 	super._ready()
-	stagger_time = 4.0
 	parry_window = 0.4
+	can_contact_damage = false
 
 func _behavior(delta: float) -> void:
 	if is_stunned():
@@ -92,6 +91,7 @@ func _chase() -> void:
 		velocity.x = 0
 		attack_step = 0
 		attack_timer = 0.0
+		can_contact_damage = false
 		state = State.ATTACK
 		return
 
@@ -104,13 +104,11 @@ func _attack(delta: float) -> void:
 	if attack_step == 0 and attack_timer >= 0.1:
 		anim.play("attack")
 		already_hit = false
-		can_contact_damage = false  # Disable for 1st swing
 		_perform_attack()
 		attack_step = 1
 		attack_timer = 0.0
 
 	elif attack_step == 1 and attack_timer >= HIT_DELAY:
-		can_contact_damage = true  # RE-ENABLE for 2nd swing
 		anim.play("attack2")
 		already_hit = false
 		_perform_attack()
@@ -120,7 +118,6 @@ func _attack(delta: float) -> void:
 	elif attack_step == 2 and attack_timer >= 0.2:
 		state = State.COOLDOWN
 		attack_timer = 0.0
-		can_contact_damage = true  # Re-enable after combo
 
 func _cooldown(delta: float) -> void:
 	velocity.x = 0
@@ -129,7 +126,10 @@ func _cooldown(delta: float) -> void:
 
 	if attack_timer >= COOLDOWN_TIME:
 		attack_timer = 0.0
-		# ... rest of cooldown logic
+		if _player_dir() != 0.0:
+			state = State.CHASE
+		else:
+			state = State.PATROL
 
 func _perform_attack() -> void:
 	if already_hit:

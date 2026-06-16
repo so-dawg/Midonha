@@ -1,7 +1,7 @@
 extends Sprite2D
 
 @export var damage: int = 1
-@export var contact_cooldown: float = 0.2
+@export var contact_cooldown: float = 0.5
 
 var contact_timer: float = 0.0
 @onready var area: Area2D = $Area2D

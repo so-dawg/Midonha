@@ -3,7 +3,9 @@ extends PlayerState
 # Grounded and moving. Same as idle but also handles the skid (pressing against
 # your own momentum) feel, and drops back to idle once you've stopped.
 
-var facing := 1
+const DUST := preload("res://scenes/Dust.tscn")
+
+var dust_timer := 0.0
 
 func exit() -> void:
 	p.was_skidding = false
@@ -35,5 +37,21 @@ func physics_update(delta: float) -> String:
 
 	# Rising edge of a skid — hook for VFX/SFX once you have them.
 
+	if is_skidding and not p.was_skidding:
+		_spawn_skid_dust()
+
+	if is_skidding:
+		dust_timer -= delta
+		if dust_timer <= 0.0:
+			_spawn_skid_dust()
+			dust_timer = 0.08
+
 	p.was_skidding = is_skidding
 	return ""
+
+
+func _spawn_skid_dust() -> void:
+	var d := DUST.instantiate()
+	d.position = Vector2(-8 * p.facing, 13)
+	d.flip_h = p.facing < 0
+	p.add_child(d)

@@ -144,4 +144,4 @@ animations = [{
 
 [node name="smoke" type="AnimatedSprite2D" unique_id=892304280]
 sprite_frames = SubResource("SpriteFrames_mi0go")
-animation = &"land_smoke"
+animation = &"dash_smoke"
