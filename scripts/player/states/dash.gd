@@ -14,6 +14,8 @@ func enter() -> void:
 	p.ghost_timer = 0.0                # spawn the first afterimage immediately
 	p.sprite.flip_h = p.dash_dir < 0.0
 	p.sprite.play("dash")
+	if p.is_on_floor():
+		p._spawn_smoke("dash_smoke")
 	p.stamina -= p.dash_cost
 
 func physics_update(delta: float) -> String:

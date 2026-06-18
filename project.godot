@@ -18,10 +18,15 @@ config/icon="res://icon.svg"
 [autoload]
 
 GameState="*res://scripts/world/game_state.gd"
+MCPRuntime="*uid://ytvaheis2qhb"
 
 [dotnet]
 
 project/assembly_name="Midonha"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot_mcp/plugin.cfg")
 
 [global_group]
 

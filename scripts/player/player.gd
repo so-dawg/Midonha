@@ -28,7 +28,7 @@ class_name Player extends CharacterBody2D
 @export var attack_cooldown: float = 0.45     # min time between swings (anti-spam)
 
 # Horizontal movement
-@export var max_speed: float = 170.0
+@export var max_speed: float = 120.0
 @export var ground_accel: float = 800.0
 @export var ground_friction: float = 1000.0
 @export var air_accel: float = 500.0
@@ -36,7 +36,7 @@ class_name Player extends CharacterBody2D
 @export var turn_accel_mult: float = 1.0       # accel is stronger when turning against current velocity
 
 # Jump / gravity
-@export var jump_velocity: float = -340.0
+@export var jump_velocity: float = -270.0
 @export var max_air_jumps: int = 1            # extra mid-air jumps (1 = double jump; 0 = locked)
 @export var gravity_rising: float = 900.0     # while holding jump and moving up
 @export var gravity_falling: float = 1600.0   # released, or falling
@@ -102,14 +102,13 @@ var stamina: float = 100.0                    #stamina make it cost while player
 
 var health: int                               # set from max_health in _ready
 var heal_charges: int                         # remaining heals; refilled on respawn
-var dust_timer := 0.0
 
 const PARRY_TIME := 0.2
 const SLASH_SCENE := preload("res://scenes/Slash.tscn")
 const GHOST_SCENE := preload("res://scenes/Ghost.tscn")
 const CURRENCY_DROP_SCENE := preload("res://scenes/CurrencyDrop.tscn")
 const GHOST_INTERVAL: float = 0.03
-const DUST := preload("res://scenes/Dust.tscn")
+const SMOKE := preload("res://scenes/Smoke.tscn")
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var health_diamonds = get_tree().get_first_node_in_group("health_diamonds")
@@ -193,6 +192,7 @@ func _physics_process(delta: float) -> void:
 		if hard:
 			landing_lockout_timer = hard_land_lockout
 			_squash(hard_land_squash)
+			_spawn_smoke("land_smoke")
 		else:
 			_squash(land_squash)
 		landed.emit(impact_vy, hard)
@@ -419,3 +419,13 @@ func _spawn_currency_drop() -> void:
 	var drop = CURRENCY_DROP_SCENE.instantiate()
 	get_parent().add_child(drop)
 	drop.global_position = GameState.dropped_position
+
+func _spawn_smoke(anim: String) -> void:
+	var s := SMOKE.instantiate()
+	s.animation = anim
+	s.speed_scale = 1.5   # make it play 1.5x faster
+	s.scale = Vector2(0.6, 0.6)
+	s.flip_h = facing < 0
+	s.z_index = -1
+	get_parent().add_child(s)
+	s.global_position = global_position + Vector2(0, 13)

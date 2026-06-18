@@ -3,9 +3,10 @@ extends PlayerState
 # Grounded and moving. Same as idle but also handles the skid (pressing against
 # your own momentum) feel, and drops back to idle once you've stopped.
 
-const DUST := preload("res://scenes/Dust.tscn")
+const SMOKE := preload("res://scenes/Smoke.tscn")
 
 var dust_timer := 0.0
+var run_dust_timer := 0.0
 
 func exit() -> void:
 	p.was_skidding = false
@@ -32,10 +33,7 @@ func physics_update(delta: float) -> String:
 
 	if not p.is_action_animating():
 		p.sprite.play("run")
-		# Placeholder: drag the run anim to fake a skid until a real one exists.
 		p.sprite.speed_scale = 0.3 if is_skidding else 1.0
-
-	# Rising edge of a skid — hook for VFX/SFX once you have them.
 
 	if is_skidding and not p.was_skidding:
 		_spawn_skid_dust()
@@ -44,14 +42,28 @@ func physics_update(delta: float) -> String:
 		dust_timer -= delta
 		if dust_timer <= 0.0:
 			_spawn_skid_dust()
-			dust_timer = 0.08
+			dust_timer = 0.15
 
 	p.was_skidding = is_skidding
+
+	if not is_skidding and p.is_on_floor() and absf(p.velocity.x) > 50.0:
+		run_dust_timer -= delta
+		if run_dust_timer <= 0.0:
+			_spawn_run_dust()
+			run_dust_timer = 0.2
+
 	return ""
 
-
 func _spawn_skid_dust() -> void:
-	var d := DUST.instantiate()
-	d.position = Vector2(-8 * p.facing, 13)
-	d.flip_h = p.facing < 0
-	p.add_child(d)
+	var s := SMOKE.instantiate()
+	s.animation = "skid_smoke"
+	s.flip_h = p.facing < 0
+	p.get_parent().add_child(s)
+	s.global_position = p.global_position + Vector2(-12 * p.facing, 8)
+
+func _spawn_run_dust() -> void:
+	var s := SMOKE.instantiate()
+	s.animation = "runnning_smoke"
+	s.flip_h = p.facing < 0
+	p.get_parent().add_child(s)
+	s.global_position = p.global_position + Vector2(0, 9)
