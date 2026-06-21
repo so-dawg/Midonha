@@ -281,5 +281,9 @@ metadata/_aseprite_wizard_config_ = {
 metadata/_aseprite_wizard_source_file_hash_ = "dee2a0548bde2d37fa8626992acf3828"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1903844322]
+offset = Vector2(0, -30)
 zoom = Vector2(3, 3)
-limit_bottom = 214
+process_callback = 0
+limit_enabled = false
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0

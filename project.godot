@@ -11,22 +11,21 @@ config_version=5
 [application]
 
 config/name="Midonha"
-run/main_scene="uid://kxk51r8lvv0e"
+run/main_scene="uid://fkcbsssg60nj"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GameState="*res://scripts/world/game_state.gd"
-MCPRuntime="*uid://ytvaheis2qhb"
+
+[display]
+
+window/stretch/mode="viewport"
 
 [dotnet]
 
 project/assembly_name="Midonha"
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/godot_mcp/plugin.cfg")
 
 [global_group]
 

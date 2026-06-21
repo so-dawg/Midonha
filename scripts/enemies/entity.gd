@@ -18,8 +18,6 @@ var can_contact_damage: bool = true
 
 @onready var hitbox: Area2D = get_node_or_null("Hitbox")
 
-signal died
-
 func _ready() -> void:
 	health = max_health
 
@@ -78,7 +76,6 @@ func _knockback(from: Vector2) -> void:
 
 func die() -> void:
 	GameState.add_currency(currency_reward)
-	died.emit()
 	queue_free()
 
 func _player_dir() -> float:

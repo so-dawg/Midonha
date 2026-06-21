@@ -63,6 +63,7 @@ class_name Player extends CharacterBody2D
 
 # Parry / hit stop-
 @export var max_bullets: int = 10
+@export var parry_window: float = 1.0        # time window for a successful parry (testing)
 @export var hit_stop_duration: float = 0.08
 
 # Dash -
@@ -103,7 +104,7 @@ var stamina: float = 100.0                    #stamina make it cost while player
 var health: int                               # set from max_health in _ready
 var heal_charges: int                         # remaining heals; refilled on respawn
 
-const PARRY_TIME := 0.2
+
 const SLASH_SCENE := preload("res://scenes/Slash.tscn")
 const GHOST_SCENE := preload("res://scenes/Ghost.tscn")
 const CURRENCY_DROP_SCENE := preload("res://scenes/CurrencyDrop.tscn")
@@ -121,8 +122,7 @@ var diamone_empty = preload("res://ui/playing_ui/health_empty.png")
 
 var state_machine: PlayerStateMachine
 
-signal landed(impact_velocity: float, hard: bool)
-signal parry_succeeded
+
 
 func _ready() -> void:
 	add_to_group("player")          # lets enemies identify the player for contact damage
@@ -195,7 +195,6 @@ func _physics_process(delta: float) -> void:
 			_spawn_smoke("land_smoke")
 		else:
 			_squash(land_squash)
-		landed.emit(impact_vy, hard)
 	was_on_floor = on_floor_now
 
 
@@ -262,6 +261,7 @@ func start_jump(is_air_jump: bool = false) -> void:
 	coyote_timer = 0.0
 	jumped_this_frame = true         # tells landing-detection to ignore this frame
 	_squash(jump_stretch)
+	_spawn_smoke("land_smoke")
 	if not is_action_animating():
 		sprite.play("jump")
 
@@ -302,11 +302,8 @@ func _handle_parry(delta: float) -> void:
 	parry_timer = max(parry_timer - delta, 0.0)
 	if not Input.is_action_just_pressed("parry"):
 		return
-	if bullets <= 0 or parry_timer > 0.0:
-		return
 	sprite.play("parry")
-	bullets -= 1
-	parry_timer = PARRY_TIME
+	parry_timer = parry_window
 
 
 # True while the parry window is open.
@@ -315,11 +312,10 @@ func is_parrying() -> bool:
 
 # Called by attackers: if we're parrying, eat the hit, trigger hit stop, and
 # report success. Returns true when the parry connected.
-func try_parry(_parry_window: float = PARRY_TIME) -> bool:
+func try_parry() -> bool:
 	if not is_parrying():
 		return false
 	parry_timer = 0.0
-	parry_succeeded.emit()
 	_hit_stop(hit_stop_duration)
 	return true
 
@@ -381,9 +377,7 @@ func die():
 	# killzone), and reloading frees this body mid-physics, which Godot forbids.
 	get_tree().reload_current_scene.call_deferred()
 
-# 9999999 damage apply
-func fall() -> void:
-	die()
+
 
 func update_health_display():
 	var diamonds = health_diamonds.get_children()
